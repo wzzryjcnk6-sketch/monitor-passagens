@@ -170,7 +170,7 @@ def _link_compra(bruto, companhias):
         if not url:
             continue
         vendedor = _pegar(o, "seller", "bookWith", "name", padrao="")
-        candidato = {"url": url, "vendedor": vendedor, "da_companhia": any(
+        candidato = {"url": url, "vendedor": vendedor, "da_companhia": bool(o.get("isAirline")) or any(
             c and c.lower() in str(vendedor).lower() for c in companhias)}
         if candidato["da_companhia"]:
             return candidato
