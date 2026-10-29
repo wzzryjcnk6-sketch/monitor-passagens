@@ -1,0 +1,68 @@
+name: Monitor de passagens
+
+on:
+  schedule:
+    # Cron é em UTC. 14:50 UTC = 11:50 em Brasília; 22:50 UTC = 19:50 em Brasília.
+    - cron: "50 14 * * *"
+    - cron: "50 22 * * *"
+  workflow_dispatch:
+    inputs:
+      teste_email:
+        description: "Só enviar um e-mail de teste de queda de preço"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  buscar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rodar o monitor
+        id: rodar
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          EMAIL_REMETENTE: ${{ secrets.EMAIL_REMETENTE }}
+          EMAIL_SENHA_APP: ${{ secrets.EMAIL_SENHA_APP }}
+          EMAIL_DESTINO: ${{ secrets.EMAIL_DESTINO }}
+        run: python -m monitor.main ${{ inputs.teste_email && '--teste-email' || '' }}
+
+      - name: Salvar histórico no repositório
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs data
+          if git diff --cached --quiet; then
+            echo "Nada mudou."
+          else
+            git commit -m "Rodada do monitor: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  publicar:
+    needs: buscar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

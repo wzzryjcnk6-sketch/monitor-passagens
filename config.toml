@@ -1,0 +1,41 @@
+# Configuração do monitor de passagens GRU → PDX.
+# Pode editar direto no site do GitHub (ícone de lápis). Linhas com # são comentários.
+
+[viagem]
+origem = "GRU"
+destino = "PDX"
+datas = ["2027-01-23", "2027-01-24", "2027-01-25"]
+adultos = 2
+orcamento_total = 6500        # R$ para as 2 pessoas, só ida
+moeda = "BRL"
+
+[controle]
+data_fim = "2026-11-15"       # depois deste dia o monitor para sozinho
+ja_comprei = false            # mude para true quando comprar a ida: o monitor para na hora
+
+[busca]
+fonte = "apify"               # "apify" (dados reais) ou "exemplo" (dados de mentira, para testes)
+resultados_por_data = 30      # quantas opções trazer por data
+links_de_compra_top = 6       # quantas opções por data ganham link direto de compra (o resto abre no Google Flights)
+max_conexoes = "2"            # "0", "1", "2" ou "any"
+
+[alertas]
+queda_minima = 50             # só avisa queda de preço se o menor preço baixar pelo menos R$ 50
+
+# "Melhor oferta": nota de 0 a 100. Os pesos dizem o quanto cada item conta.
+[nota.pesos]
+preco = 50
+duracao = 20
+conexoes = 15
+mala_de_mao = 15
+
+# Pontos descontados da nota em situações ruins.
+[nota.penalidades]
+conexao_curta = 12            # conexão menor que conexao_curta_min
+conexao_longa = 8             # conexão maior que conexao_longa_min
+troca_de_aeroporto = 15       # precisa trocar de aeroporto na conexão
+acima_do_orcamento = 20
+
+[nota.limites]
+conexao_curta_min = 90        # minutos
+conexao_longa_min = 360       # minutos
