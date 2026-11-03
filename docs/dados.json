@@ -13,7 +13,7 @@
  },
  "fonte": "apify",
  "atualizado_em": "2026-11-02T20:22-03:00",
- "proxima_atualizacao": "2026-11-03T12:00-03:00",
+ "proxima_atualizacao": null,
  "pesos": {
   "pesos": {
    "preco": 50,
@@ -34,7 +34,8 @@
  },
  "status": {
   "ok": true,
-  "mensagem": "Busca concluída."
+  "parado": "Você marcou que já comprou a ida.",
+  "mensagem": "Monitor encerrado. Você marcou que já comprou a ida."
  },
  "resumo": {
   "menor_geral": 8218.0,
