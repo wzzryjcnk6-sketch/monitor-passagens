@@ -11,7 +11,7 @@ moeda = "BRL"
 
 [controle]
 data_fim = "2026-11-15"       # depois deste dia o monitor para sozinho
-ja_comprei = false            # mude para true quando comprar a ida: o monitor para na hora
+ja_comprei = true            # mude para true quando comprar a ida: o monitor para na hora
 
 [busca]
 fonte = "apify"               # "apify" (dados reais) ou "exemplo" (dados de mentira, para testes)
